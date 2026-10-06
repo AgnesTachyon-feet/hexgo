@@ -1,8 +1,28 @@
 package main
 
-import "fmt"
+import (
+	"kington/adapters"
+	"kington/core"
 
-func main(){
+	"github.com/gofiber/fiber/v2"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+)
 
-	fmt.Println("Kinglama")
+func main() {
+	app := fiber.New()
+
+	db, err := gorm.Open(sqlite.Open("orders.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to conncet database")
+	}
+
+
+	orderRepo := adapters.NewGormOrderRepository(db)
+	orderService := core.NewOrderService(orderRepo)
+	orderHandler := adapters.NewHtppOrderHandler(orderService)
+
+	app.Post("/order", orderHandler.CreateOrder)
+
+	app.Listen(":8000")
 }
