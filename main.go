@@ -16,11 +16,11 @@ func main() {
 	if err != nil {
 		panic("failed to conncet database")
 	}
-
+	db.AutoMigrate(&core.Order{})
 
 	orderRepo := adapters.NewGormOrderRepository(db)
 	orderService := core.NewOrderService(orderRepo)
-	orderHandler := adapters.NewHtppOrderHandler(orderService)
+	orderHandler := adapters.NewHttpOrderHandler(orderService)
 
 	app.Post("/order", orderHandler.CreateOrder)
 

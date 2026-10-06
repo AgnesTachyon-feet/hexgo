@@ -11,6 +11,10 @@ type HttpOrderHandler struct {
 	service core.OrderService
 }
 
+func NewHttpOrderHandler(service core.OrderService) *HttpOrderHandler {
+	return &HttpOrderHandler{service: service}
+}
+
 func (h *HttpOrderHandler) CreateOrder(c *fiber.Ctx) error {
 	var order core.Order
 	if err := c.BodyParser(&order); err != nil {
